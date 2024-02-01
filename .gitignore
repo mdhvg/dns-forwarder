@@ -1,3 +1,5 @@
 boost_*
 build
 *packet
+bin
+build

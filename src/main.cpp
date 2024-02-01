@@ -1,15 +1,13 @@
-#include <udp_cl.h>
-#include <udp_server.h>
-#include <dns.h>
+#include "Resolver.h"
 
 #include <iostream>
+#include <memory>
 #include <ios>
 #include <fstream>
 
 int main() {
-
-
-
+    std::unique_ptr<Resolver> resolver = std::make_unique<Resolver>();
+    resolver->Start();
 
 
 
@@ -43,7 +41,7 @@ int main() {
     // std::cout << "NSCOUNT: " << header.resource_entries << std::endl;
     // std::cout << "ARCOUNT: " << header.authoritative_entries << std::endl;
 
-    // DomainName domain = parser.GetDomain();
+    // DNSDomainName domain = parser.GetDomain();
     // std::cout << "Domain: ";
     // for (auto label : domain.labels) {
     //     std::cout << label << " ";
@@ -80,7 +78,7 @@ int main() {
     // std::cout << "NSCOUNT: " << header.resource_entries << std::endl;
     // std::cout << "ARCOUNT: " << header.authoritative_entries << std::endl;
 
-    // DomainName domain = parser.GetDomain();
+    // DNSDomainName domain = parser.GetDomain();
     // std::cout << "Domain: ";
     // for (auto label : domain.labels) {
     //     std::cout << label << " ";

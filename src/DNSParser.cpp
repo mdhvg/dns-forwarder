@@ -1,4 +1,4 @@
-#include "dns.h"
+#include "DNSParser.h"
 
 DNSParser::DNSParser(const char* buffer) {
     Parse(buffer);
@@ -7,7 +7,7 @@ DNSParser::~DNSParser() = default;
 
 void DNSParser::Parse(const char* buffer) {
     header.id = (buffer[0] << 8) | buffer[1];
-    header.qr = (buffer[2] & 0x80) != 0;
+    header.qr = (buffer[2] & 0x80);
     header.opcode = (buffer[2] & 0x78) >> 3;
     header.authoritative_answer = (buffer[2] & 0x04) != 0;
     header.truncated_message = (buffer[2] & 0x02) != 0;
@@ -40,7 +40,7 @@ void DNSParser::Parse(const char* buffer) {
         while (pointerFlag = read_nBytes_As<uint16_t>(buffer, currentByte), pointerFlag == 0xc00c) {
             NASSERT(checkNextByte(buffer, currentByte, 4, 0x00010001), 0, "Packet smaller than expected");
 
-            ip_addr ip;
+            ResponseIPAddress ip;
 
             int timeout = read_nBytes_As<int>(buffer, currentByte);
             ip.timeOut = timeout;
@@ -61,11 +61,11 @@ DnsHeader DNSParser::GetHeader() {
     return header;
 }
 
-DomainName DNSParser::GetDomain() {
+DNSDomainName DNSParser::GetDomain() {
     return domain;
 }
 
-std::vector<ip_addr> DNSParser::GetResolvedAddresses()
+std::vector<ResponseIPAddress> DNSParser::GetResolvedAddresses()
 {
     return resolvedAddresses;
 }

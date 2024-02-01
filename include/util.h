@@ -44,3 +44,4 @@
      * @param message The error message to display.
      */
 #define NASSERT(x, fail, message) if (x==fail) { printf("%s:%d error: %s\n", __FILE__, __LINE__, message); __builtin_trap(); }
+#define ASSERT(x, pass, message) if (x!=pass) { printf("%s:%d error: %s\n", __FILE__, __LINE__, message); __builtin_trap(); }

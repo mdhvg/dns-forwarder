@@ -13,21 +13,15 @@ enum ResultCode {
     REFUSED
 };
 
-/**
- * @brief Structure representing an IP address with timeout.
- */
-struct ip_addr {
+struct ResponseIPAddress {
     uint8_t octets[4] = { 0, 0, 0, 0 }; /**< Array of octets representing the IP address. */
     uint16_t timeOut = 0; /**< Timeout value for the IP address. */
 };
 
-struct DomainName {
+struct DNSDomainName {
     std::vector<std::string> labels;
 };
 
-/**
- * @brief Represents the header of a DNS packet.
- */
 struct DnsHeader {
     uint16_t id; // 16 bits
 
@@ -85,14 +79,14 @@ public:
      *
      * @return The domain name.
      */
-    DomainName GetDomain();
+    DNSDomainName GetDomain();
 
     /**
      * @brief Retrieves the list of resolved addresses in the packet.
      *
      * @return The list of resolved addresses.
      */
-    std::vector<ip_addr> GetResolvedAddresses();
+    std::vector<ResponseIPAddress> GetResolvedAddresses();
 
 private:
     /**
@@ -137,6 +131,6 @@ private:
 
 private:
     DnsHeader header;                           // The DNS header
-    DomainName domain;                          // The domain name
-    std::vector<ip_addr> resolvedAddresses;      // List of resolved addresses in the packet
+    DNSDomainName domain;                          // The domain name
+    std::vector<ResponseIPAddress> resolvedAddresses;      // List of resolved addresses in the packet
 };
