@@ -28,23 +28,23 @@ public:
      * @param response_buffer The buffer to store the response received from the server.
      * @param response_size The size of the response buffer.
      */
-    void Send(const char* buffer, int size, const char* response_buffer, int response_size);
+    void Send(std::string& reqBuffer, std::string& recvBuffer);
 
     /**
      * @brief Gets the IP address of the remote server.
      * @return The IP address of the remote server.
      */
-    std::string GetRemoteIP() const { return m_remote_ip; }
+    std::string GetRemoteIP() const { return m_RemoteIP; }
 
     /**
      * @brief Gets the port number of the remote server.
      * @return The port number of the remote server.
      */
-    uint16_t GetRemotePort() const { return m_remote_port; }
+    uint16_t GetRemotePort() const { return m_RemotePort; }
 
 private:
-    std::string m_remote_ip; ///< The IP address of the remote server.
-    uint16_t m_remote_port; ///< The port number of the remote server.
-    int m_socket; ///< The socket descriptor.
-    sockaddr_in addr; ///< The address structure.
+    std::string m_RemoteIP; ///< The IP address of the remote server.
+    uint16_t m_RemotePort; ///< The port number of the remote server.
+    int m_Socket; ///< The socket descriptor.
+    sockaddr_in m_RemoteAddr; ///< The address structure.
 };

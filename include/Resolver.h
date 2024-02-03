@@ -1,12 +1,14 @@
 #include "UDPServer.h"
 #include "UDPClient.h"
-#include "DNSParser.h"
+#include "DNSPacket.h"
 #include "Request.h"
 
 #include <memory>
 #include <queue>
 #include <thread>
 #include <vector>
+#include <unordered_map>
+#include <utility>
 
 #define DEFAULT_SERVER 3053
 
@@ -23,13 +25,16 @@ public:
     inline static Resolver& Get() { return *s_Instance; }
 
 private:
-    std::queue<Request> m_requests;
+    void CopyRsponseID(DNSPacket& packet, DNSPacket& response);
+private:
+    std::queue<RequestPair> m_Requests;
     std::thread m_ServerThread;
     std::thread m_ResolverThread;
     std::unique_ptr<UDPServer> m_Server;
     std::vector<std::unique_ptr<UDPClient>> m_Clients;
-    std::string m_clientResolveServer;
-    uint16_t m_clientPort;
+    std::string m_ClientResolveServer;
+    uint16_t m_ClientPort;
+    std::unordered_map<std::string, std::vector<ResponseIPAddress>> m_Cache;
 private:
     static Resolver* s_Instance;
 };

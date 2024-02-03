@@ -13,7 +13,7 @@ int main() {
 
 
 
-    // const char* fileName = "query_packet";
+    // char* fileName = "query_packet";
     // std::ifstream file(fileName, std::ios::binary);
 
     // if (!file.is_open()) {
@@ -25,32 +25,32 @@ int main() {
 
     // file.read(buffer, 512);
 
-    // DNSParser parser(buffer);
-    // DnsHeader header = parser.GetHeader();
+    // DNSPacket parser(buffer);
+    // DnsHeader m_Header = parser.GetHeader();
     // // print all params
-    // std::cout << "ID: " << header.id << std::endl;
-    // std::cout << "QR: " << header.qr << std::endl;
-    // std::cout << "OPCODE: " << int(header.opcode) << std::endl;
-    // std::cout << "AA: " << header.authoritative_answer << std::endl;
-    // std::cout << "TC: " << header.truncated_message << std::endl;
-    // std::cout << "RD: " << header.recursion_desired << std::endl;
-    // std::cout << "RA: " << header.recursion_available << std::endl;
-    // std::cout << "RCODE: " << header.rescode << std::endl;
-    // std::cout << "QDCOUNT: " << header.questions << std::endl;
-    // std::cout << "ANCOUNT: " << header.answers << std::endl;
-    // std::cout << "NSCOUNT: " << header.resource_entries << std::endl;
-    // std::cout << "ARCOUNT: " << header.authoritative_entries << std::endl;
+    // std::cout << "ID: " << m_Header.id << std::endl;
+    // std::cout << "QR: " << m_Header.qr << std::endl;
+    // std::cout << "OPCODE: " << int(m_Header.opcode) << std::endl;
+    // std::cout << "AA: " << m_Header.authoritative_answer << std::endl;
+    // std::cout << "TC: " << m_Header.truncated_message << std::endl;
+    // std::cout << "RD: " << m_Header.recursion_desired << std::endl;
+    // std::cout << "RA: " << m_Header.recursion_available << std::endl;
+    // std::cout << "RCODE: " << m_Header.rescode << std::endl;
+    // std::cout << "QDCOUNT: " << m_Header.questions << std::endl;
+    // std::cout << "ANCOUNT: " << m_Header.answers << std::endl;
+    // std::cout << "NSCOUNT: " << m_Header.resource_entries << std::endl;
+    // std::cout << "ARCOUNT: " << m_Header.authoritative_entries << std::endl;
 
-    // DNSDomainName domain = parser.GetDomain();
+    // DNSDomainName m_Domain = parser.GetDomain();
     // std::cout << "Domain: ";
-    // for (auto label : domain.labels) {
+    // for (auto label : m_Domain.labels) {
     //     std::cout << label << " ";
     // }
     // std::cout << std::endl;
     // UDPClient client("1.1.1.1", 53);
     // char* response = new char[512];
     // client.Send(buffer, 512, response, 512);
-    // const char* outFile = "response_packet";
+    // char* outFile = "response_packet";
     // std::ofstream out(outFile, std::ios::binary);
 
     // if (!out.is_open()) {
@@ -62,25 +62,25 @@ int main() {
     // out.close();
 
     // delete[] buffer;
-    // DNSParser parser(response);
-    // DnsHeader header = parser.GetHeader();
+    // DNSPacket parser(response);
+    // DnsHeader m_Header = parser.GetHeader();
     // // print all params
-    // std::cout << "ID: " << header.id << std::endl;
-    // std::cout << "QR: " << header.qr << std::endl;
-    // std::cout << "OPCODE: " << int(header.opcode) << std::endl;
-    // std::cout << "AA: " << header.authoritative_answer << std::endl;
-    // std::cout << "TC: " << header.truncated_message << std::endl;
-    // std::cout << "RD: " << header.recursion_desired << std::endl;
-    // std::cout << "RA: " << header.recursion_available << std::endl;
-    // std::cout << "RCODE: " << header.rescode << std::endl;
-    // std::cout << "QDCOUNT: " << header.questions << std::endl;
-    // std::cout << "ANCOUNT: " << header.answers << std::endl;
-    // std::cout << "NSCOUNT: " << header.resource_entries << std::endl;
-    // std::cout << "ARCOUNT: " << header.authoritative_entries << std::endl;
+    // std::cout << "ID: " << m_Header.id << std::endl;
+    // std::cout << "QR: " << m_Header.qr << std::endl;
+    // std::cout << "OPCODE: " << int(m_Header.opcode) << std::endl;
+    // std::cout << "AA: " << m_Header.authoritative_answer << std::endl;
+    // std::cout << "TC: " << m_Header.truncated_message << std::endl;
+    // std::cout << "RD: " << m_Header.recursion_desired << std::endl;
+    // std::cout << "RA: " << m_Header.recursion_available << std::endl;
+    // std::cout << "RCODE: " << m_Header.rescode << std::endl;
+    // std::cout << "QDCOUNT: " << m_Header.questions << std::endl;
+    // std::cout << "ANCOUNT: " << m_Header.answers << std::endl;
+    // std::cout << "NSCOUNT: " << m_Header.resource_entries << std::endl;
+    // std::cout << "ARCOUNT: " << m_Header.authoritative_entries << std::endl;
 
-    // DNSDomainName domain = parser.GetDomain();
+    // DNSDomainName m_Domain = parser.GetDomain();
     // std::cout << "Domain: ";
-    // for (auto label : domain.labels) {
+    // for (auto label : m_Domain.labels) {
     //     std::cout << label << " ";
     // }
     // std::cout << std::endl;
@@ -100,7 +100,7 @@ int main() {
     // char* recvBuffer = new char[512];
     // server.Receive(recvBuffer, 512, sendBuffer, 512);
 
-    // const char* outFile = "query_packet";
+    // char* outFile = "query_packet";
     // std::ofstream out(outFile, std::ios::binary);
     // NASSERT(out.is_open(), false, "Failed to open file: ");
     // out.write(recvBuffer, 512);

@@ -5,7 +5,7 @@
  * @param a The starting value.
  * @param b The ending value (exclusive).
  */
-#define FORLT(i, a, b) for (int i = a; i < b; ++i)
+#define FORLT(i, a, b) for (i = a; i < b; ++i)
 
  /**
   * @brief Macro for iterating over a range with a step size, starting from a and ending at b.
@@ -14,7 +14,7 @@
   * @param a The starting value.
   * @param b The ending value (inclusive).
   */
-#define FOREQ(i, a, b) for (int i = a; i <= b; ++i)
+#define FOREQ(i, a, b) for (i = a; i <= b; ++i)
 
   /**
    * @brief Macro for iterating over a range with a step size, starting from a and ending at b-1, with a specified step size.
@@ -24,7 +24,7 @@
    * @param b The ending value (exclusive).
    * @param s The step size.
    */
-#define FORLTSTEP(i, a, b, s) for (int i = a; i < b; i += s)
+#define FORLTSTEP(i, a, b, s) for (i = a; i < b; i += s)
 
    /**
     * @brief Macro for iterating over a range with a step size, starting from a and ending at b, with a specified step size.
@@ -34,7 +34,7 @@
     * @param b The ending value (inclusive).
     * @param s The step size.
     */
-#define FOREQSTEP(i, a, b, s) for (int i = a; i <= b; i += s)
+#define FOREQSTEP(i, a, b, s) for (i = a; i <= b; i += s)
 
     /**
      * @brief Macro for error checking. If the condition x is equal to fail, it prints an error message with the file name and line number, and terminates the program.
