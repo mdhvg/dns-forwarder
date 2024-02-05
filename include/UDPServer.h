@@ -1,13 +1,12 @@
 #include "util.h"
 #include "Request.h"
 #include "DNSPacket.h"
+#include "Types.h"
 
 #include <string>
 #include <queue>
 #include <arpa/inet.h>
 #include <utility>
-
-typedef std::pair<Request, std::string> RequestPair;
 
 class UDPServer {
 public:
@@ -20,7 +19,7 @@ public:
     void Respond(RequestPair request);
 private:
     std::queue<RequestPair>& m_Requests;
-    uint16_t m_port;
     int m_Socket;
+    uint16_t m_port;
     sockaddr_in server_address;
 };

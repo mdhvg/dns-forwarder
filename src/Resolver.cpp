@@ -13,37 +13,39 @@ Resolver::Resolver(uint16_t serverPort, uint16_t clientPort, std::string resolve
 void Resolver::Start()
 {
     m_ServerThread = std::thread(&UDPServer::Receive, m_Server.get());
-    std::string recvBuffer;
     while (true) {
         if (!m_Requests.empty()) {
-            Request request = m_Requests.front().first;
-            std::string reqBuffer = m_Requests.front().second;
-            printf("Resolver: Processing request from - %s of size - %d\n", request.addressString, static_cast<int>(reqBuffer.size()));
+            RequestPair request = m_Requests.front();
+            printf("Resolver: Processing request from - %s of size - %d\n", request.first.addressString, request.second.size());
             m_Requests.pop();
 
-            DNSPacket reqPacket = DNSPacket(reqBuffer);
-            if (m_Cache.find(reqPacket.GetDomain()) != m_Cache.end()) {
-                printf("Resolver: Cache hit for domain - %s\n", reqPacket.GetDomain().c_str());
-                printf("Resolver: Request ID: %d\n", reqPacket.GetID());
-                DNSPacket response(reqPacket.GetID(), reqPacket.GetDomain(), m_Cache[reqPacket.GetDomain()], DNSPacketType::RESPONSE);
-                m_Server->Respond(std::make_pair(request, response.GetBuffer()));
-                continue;
-            }
+            UString respBuffer = resolveRequest(request.second);
 
-            printf("Resolver: Cache miss for domain - %s\n", reqPacket.GetDomain().c_str());
-            UDPClient client(m_ClientResolveServer, m_ClientPort);
-            recvBuffer.clear();
-            client.Send(reqBuffer, recvBuffer);
-            DNSPacket recvPacket = DNSPacket(recvBuffer);
-            printf("Resolver: Received packet ID %d and Response packet ID %d\n", reqPacket.GetID(), recvPacket.GetID());
-            CopyRsponseID(reqPacket, recvPacket);
-            m_Server->Respond(std::make_pair(request, recvPacket.GetBuffer()));
-            m_Cache[recvPacket.GetDomain()] = recvPacket.GetResponseIPAddress();
+            m_Server->Respond(std::make_pair(request.first, respBuffer));
         }
     }
 }
 
-void Resolver::CopyRsponseID(DNSPacket& packet, DNSPacket& response)
+UString Resolver::resolveRequest(UString* request)
 {
-    response.SetID(packet.GetID());
+    DNSPacket reqPacket(*request);
+    std::string reqDomain = reqPacket.GetDNS().domain;
+    DNS resDNS;
+    if (m_Cache.find(reqDomain) != m_Cache.end()) {
+        printf("Resolver: Cache hit for domain - %s\n", reqDomain.c_str());
+        resDNS = m_Cache[reqDomain];
+    }
+    else {
+        printf("Resolver: Cache miss for domain - %s\n", reqDomain.c_str());
+        UDPClient client(m_ClientResolveServer, m_ClientPort);
+        UString resp;
+        client.Send(request, resp);
+        DNSPacket respPacket(resp);
+        printf("Resolver: Received packet ID %d and Response packet ID %d\n", reqPacket.GetDNS().header.id, respPacket.GetDNS().header.id);
+        resDNS = respPacket.GetDNS();
+        m_Cache[reqDomain] = resDNS;
+    }
+    resDNS.header.id = reqPacket.GetDNS().header.id;
+    DNSPacket resPacket(resDNS);
+    return resPacket.GetBuffer();
 }

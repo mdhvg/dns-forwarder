@@ -15,11 +15,18 @@ UDPClient::~UDPClient() {
     close(m_Socket);
 }
 
-void UDPClient::Send(std::string& reqBuffer, std::string& recvBuffer) {
-    int sent = sendto(m_Socket, reqBuffer.data(), reqBuffer.size(), 0, (sockaddr*)&m_RemoteAddr, sizeof(m_RemoteAddr));
+void UDPClient::Send(UString& reqBuffer, UString& recvBuffer) {
+    // MIGHT GIVE BUGS
+    int sent = sendto(m_Socket,
+        reqBuffer.data(),
+        reqBuffer.size(),
+        0,
+        (sockaddr*)&m_RemoteAddr,
+        sizeof(m_RemoteAddr));
     NASSERT(sent, -1, "Send failed");
 
-    char* temp = new char[512];
+    // MIGHT GIVE BUGS
+    unsigned char* temp = new unsigned char[512];
     int received = recvfrom(m_Socket,
         temp,
         512,
