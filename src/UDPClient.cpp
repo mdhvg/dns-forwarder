@@ -15,7 +15,7 @@ UDPClient::~UDPClient() {
     close(m_Socket);
 }
 
-void UDPClient::Send(UString& reqBuffer, UString& recvBuffer) {
+UString* UDPClient::Send(UString& reqBuffer) {
     // MIGHT GIVE BUGS
     int sent = sendto(m_Socket,
         reqBuffer.data(),
@@ -34,6 +34,7 @@ void UDPClient::Send(UString& reqBuffer, UString& recvBuffer) {
         nullptr,
         nullptr);
     NASSERT(received, -1, "Receive failed");
-    recvBuffer.append(temp, received);
+    UString* recvBuffer = new UString(temp, received);
     delete[] temp;
+    return recvBuffer;
 }

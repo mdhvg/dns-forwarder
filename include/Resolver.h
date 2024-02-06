@@ -25,7 +25,7 @@ public:
     inline static Resolver& Get() { return *s_Instance; }
 
 private:
-    UString resolveRequest(UString* request);
+    DNSPacket* resolveRequest(UString* request);
 private:
     std::queue<RequestPair> m_Requests;
     std::thread m_ServerThread;

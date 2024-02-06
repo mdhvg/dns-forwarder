@@ -7,6 +7,7 @@
 class UString {
 public:
     UString(unsigned char* string, int size);
+    UString(char* string, int size);
     UString(int size, unsigned char initial);
     UString(int size);
     UString();

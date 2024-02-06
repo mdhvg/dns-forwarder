@@ -4,13 +4,13 @@ DNSPacket::DNSPacket(DNS dns) : m_Dns(dns) {
     create();
 }
 
-DNSPacket::DNSPacket(UString buffer) : m_Buffer(buffer) {
+DNSPacket::DNSPacket(UString* buffer) : m_Buffer(buffer) {
     loadBuffer();
 }
 
 void DNSPacket::create() {
     uint16_t m_BufferSize = m_Dns.type == DNSPacketType::QUERY ? 12 + m_Dns.domain.size() + 1 + 4 : 12 + m_Dns.domain.size() + 1 + 4 + (m_Dns.ipAddr.size() * 16);
-    m_Buffer = UString(m_BufferSize, 0);
+    m_Buffer = new UString(m_BufferSize, 0);
 
     uint16_t currentOffset = 0;
     copyNBytesToBuffer<uint16_t>(m_Buffer, currentOffset, m_Dns.header.id);
@@ -30,7 +30,7 @@ void DNSPacket::create() {
     copyNBytesToBuffer<uint16_t>(m_Buffer, currentOffset, m_Dns.header.resource_entries);
     copyNBytesToBuffer<uint16_t>(m_Buffer, currentOffset, m_Dns.header.authoritative_entries);
 
-    m_Buffer.copyAt(m_Dns.domain, currentOffset);
+    m_Buffer->copyAt(m_Dns.domain, currentOffset);
     currentOffset += m_Dns.domain.size() + 1;
 
     copyNBytesToBuffer<uint32_t>(m_Buffer, currentOffset, 0x00010001);
@@ -69,8 +69,8 @@ void DNSPacket::loadBuffer() {
     copyNBytesFromBuffer<uint16_t>(m_Buffer, currentOffset, m_Dns.header.resource_entries);
     copyNBytesFromBuffer<uint16_t>(m_Buffer, currentOffset, m_Dns.header.authoritative_entries);
 
-    while (m_Buffer[currentOffset] != 0) {
-        m_Dns.domain.push_back(static_cast<char>(m_Buffer[currentOffset]));
+    while ((*m_Buffer)[currentOffset] != 0) {
+        m_Dns.domain.push_back(static_cast<char>((*m_Buffer)[currentOffset]));
         currentOffset += 1;
     }
     currentOffset += 4;
@@ -89,18 +89,18 @@ void DNSPacket::loadBuffer() {
             m_Dns.ipAddr.push_back(ip);
         }
     }
-    m_BufferSize = currentOffset;
+    m_BufferSize = currentOffset + 1;
 }
 
 int DNSPacket::GetBufferSize()
 {
-    return m_Buffer.size();
+    return m_Buffer->size();
 }
 
 DNS DNSPacket::GetDNS() {
     return m_Dns;
 }
 
-UString DNSPacket::GetBuffer() {
+UString* DNSPacket::GetBuffer() {
     return m_Buffer;
 }

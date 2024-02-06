@@ -1,32 +1,42 @@
 #include "UString.h"
 
 UString::UString(unsigned char* string, int size) {
-    m_String = string;
+    m_Length = size * 1.5;
+    m_String = new unsigned char[m_Length];
+    memmove(m_String, string, size);
+    m_Size = size;
+}
+
+UString::UString(char* string, int size)
+{
+    m_Length = size * 1.5;
+    m_String = new unsigned char[m_Length];
+    for (int i = 0; i < size; i++) {
+        m_String[i] = static_cast<unsigned char>(string[i]);
+    }
     m_Size = size;
 }
 
 UString::UString(int size, unsigned char initial) {
-    delete[] m_String;
     m_Size = size;
     m_Length = size + size / 2;
     m_String = new unsigned char[m_Length] {initial};
 }
 
 UString::UString(int size) {
-    delete[] m_String;
     m_Size = size;
     m_Length = size + size / 2;
     m_String = new unsigned char[size] {0};
 }
 
 UString::UString() {
-    delete[] m_String;
     m_Size = 0;
     m_Length = 1;
     m_String = new unsigned char[1];
 }
 
 UString::~UString() {
+    printf("UString: Deleting string: %s\n", m_String);
     delete[] m_String;
 }
 

@@ -33,13 +33,10 @@ void UDPServer::Receive() {
             request.addressPointer,
             &request.addressSize
         );
-        UString* buffer;
-        buffer->clear();
-        buffer->append(temp, received);
+        UString* buffer = new UString(temp, received);
         printf("Server: Received %d bytes from %s:%d\n", received, inet_ntoa(request.address.sin_addr), ntohs(request.address.sin_port));
         NASSERT(received, -1, "Receive failed");
         m_Requests.push(std::make_pair(request, buffer));
-        delete[] temp;
     }
 }
 

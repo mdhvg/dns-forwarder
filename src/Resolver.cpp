@@ -16,19 +16,22 @@ void Resolver::Start()
     while (true) {
         if (!m_Requests.empty()) {
             RequestPair request = m_Requests.front();
-            printf("Resolver: Processing request from - %s of size - %d\n", request.first.addressString, request.second.size());
-            m_Requests.pop();
+            printf("Resolver: Processing request from - %s of size - %d\n", request.first.addressString, request.second->size());
+            // m_Requests.pop();
 
-            UString respBuffer = resolveRequest(request.second);
+            DNSPacket* respPacket = resolveRequest(request.second);
 
+            UString* respBuffer = respPacket->GetBuffer();
             m_Server->Respond(std::make_pair(request.first, respBuffer));
+            delete respPacket;
+            delete request.second;
         }
     }
 }
 
-UString Resolver::resolveRequest(UString* request)
+DNSPacket* Resolver::resolveRequest(UString* request)
 {
-    DNSPacket reqPacket(*request);
+    DNSPacket reqPacket(request);
     std::string reqDomain = reqPacket.GetDNS().domain;
     DNS resDNS;
     if (m_Cache.find(reqDomain) != m_Cache.end()) {
@@ -38,14 +41,13 @@ UString Resolver::resolveRequest(UString* request)
     else {
         printf("Resolver: Cache miss for domain - %s\n", reqDomain.c_str());
         UDPClient client(m_ClientResolveServer, m_ClientPort);
-        UString resp;
-        client.Send(request, resp);
-        DNSPacket respPacket(resp);
-        printf("Resolver: Received packet ID %d and Response packet ID %d\n", reqPacket.GetDNS().header.id, respPacket.GetDNS().header.id);
-        resDNS = respPacket.GetDNS();
+        UString* resp = client.Send(*request);
+        DNSPacket* respPacket = new DNSPacket(resp);
+        printf("Resolver: Received packet ID %d and Response packet ID %d\n", reqPacket.GetDNS().header.id, respPacket->GetDNS().header.id);
+        resDNS = respPacket->GetDNS();
         m_Cache[reqDomain] = resDNS;
+        delete respPacket;
     }
     resDNS.header.id = reqPacket.GetDNS().header.id;
-    DNSPacket resPacket(resDNS);
-    return resPacket.GetBuffer();
+    return new DNSPacket(resDNS);
 }

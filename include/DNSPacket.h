@@ -12,28 +12,28 @@
 class DNSPacket {
 public:
     DNSPacket(DNS);
-    DNSPacket(UString buffer);
+    DNSPacket(UString* buffer);
     ~DNSPacket() = default;
 
     int GetBufferSize();
     DNS GetDNS();
-    UString GetBuffer();
+    UString* GetBuffer();
 private:
     void loadBuffer();
     void create();
 
 private:
     template <class T>
-    inline void copyNBytesToBuffer(UString buffer, uint16_t& currentOffset, T value) {
-        memmove(&buffer[currentOffset], &value, sizeof(T));
+    inline void copyNBytesToBuffer(UString* buffer, uint16_t& currentOffset, T value) {
+        memmove(&(*buffer)[currentOffset], &value, sizeof(T));
         if (LITTLE_ENDIAN) {
             if (sizeof(T) > 1) {
                 uint8_t l = 0;
                 uint8_t r = sizeof(T) - 1;
                 while (l < r) {
-                    uint8_t temp = buffer[currentOffset + l];
-                    buffer[currentOffset + l] = buffer[currentOffset + r];
-                    buffer[currentOffset + r] = temp;
+                    uint8_t temp = (*buffer)[currentOffset + l];
+                    (*buffer)[currentOffset + l] = (*buffer)[currentOffset + r];
+                    (*buffer)[currentOffset + r] = temp;
                     l++;
                     r--;
                 }
@@ -42,17 +42,17 @@ private:
     }
 
     template <class T>
-    inline void copyNBytesFromBuffer(UString& buffer, uint16_t& currentOffset, T& value) {
+    inline void copyNBytesFromBuffer(UString* buffer, uint16_t& currentOffset, T& value) {
         unsigned char* temp = new unsigned char[sizeof(T)];
-        memmove(temp, &buffer[currentOffset], sizeof(T));
+        memmove(temp, &((*buffer)[currentOffset]), sizeof(T));
         if (LITTLE_ENDIAN) {
             if (sizeof(T) > 1) {
                 uint8_t l = 0;
                 uint8_t r = sizeof(T) - 1;
                 while (l < r) {
-                    uint8_t t = temp[currentOffset + l];
-                    temp[currentOffset + l] = temp[currentOffset + r];
-                    temp[currentOffset + r] = t;
+                    uint8_t t = temp[l];
+                    temp[l] = temp[r];
+                    temp[r] = t;
                     l++;
                     r--;
                 }
@@ -60,12 +60,13 @@ private:
         }
         memmove(&value, temp, sizeof(T));
         delete[] temp;
+        currentOffset += sizeof(T);
     }
 
 private:
     DNS m_Dns;
-    UString m_Buffer;
-    int m_BufferSize = m_Buffer.size();
+    UString* m_Buffer;
+    int m_BufferSize = m_Buffer->size();
 };
 
 #endif // DNSPACKET_H

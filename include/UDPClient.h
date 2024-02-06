@@ -9,7 +9,7 @@ public:
     UDPClient(std::string ip, uint16_t port);
     ~UDPClient();
 
-    void Send(UString& reqBuffer, UString& recvBuffer);
+    UString* Send(UString& reqBuffer);
 
     std::string GetRemoteIP() const { return m_RemoteIP; }
     uint16_t GetRemotePort() const { return m_RemotePort; }
