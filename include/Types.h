@@ -2,13 +2,13 @@
 #define TYPES_H
 
 #include "Request.h"
-#include "UString.h"
+#include "DNSPacketHandler.h"
 
 #include <utility>
 #include <string>
 #include <vector>
 
-typedef std::pair<Request, UString*> RequestPair;
+typedef std::pair<Request*, DNSPacketHandler*> RequestPair;
 
 enum ResultCode {
 	NOERROR,

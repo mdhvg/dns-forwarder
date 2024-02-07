@@ -1,5 +1,4 @@
 #include "util.h"
-#include "Request.h"
 #include "DNSPacket.h"
 #include "Types.h"
 

@@ -25,7 +25,7 @@ public:
     inline static Resolver& Get() { return *s_Instance; }
 
 private:
-    DNSPacket* resolveRequest(UString* request);
+    DNSPacketHandler* resolveRequest(DNSPacketHandler* request);
 private:
     std::queue<RequestPair> m_Requests;
     std::thread m_ServerThread;
@@ -34,7 +34,7 @@ private:
     std::vector<std::unique_ptr<UDPClient>> m_Clients;
     std::string m_ClientResolveServer;
     uint16_t m_ClientPort;
-    std::unordered_map<std::string, DNS> m_Cache;
+    std::unordered_map<std::string, DNSPacketHandler*> m_Cache;
 private:
     static Resolver* s_Instance;
 };

@@ -1,5 +1,5 @@
 #include "util.h"
-#include "UString.h"
+#include "DNSPacketHandler.h"
 
 #include <string>
 #include <arpa/inet.h>
@@ -9,10 +9,7 @@ public:
     UDPClient(std::string ip, uint16_t port);
     ~UDPClient();
 
-    UString* Send(UString& reqBuffer);
-
-    std::string GetRemoteIP() const { return m_RemoteIP; }
-    uint16_t GetRemotePort() const { return m_RemotePort; }
+    DNSPacketHandler* Send(DNSPacketHandler* packet);
 
 private:
     std::string m_RemoteIP;

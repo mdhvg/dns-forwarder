@@ -22,19 +22,18 @@ UDPServer::~UDPServer() {
 
 void UDPServer::Receive() {
     while (true) {
-        Request request;
-        // MIGHT GIVE BUGS
+        Request* request = new Request();
         unsigned char* temp = new unsigned char[512];
         int received = recvfrom(
             m_Socket,
             temp,
             512,
             0,
-            request.addressPointer,
-            &request.addressSize
+            request->addressPointer,
+            &request->addressSize
         );
-        UString* buffer = new UString(temp, received);
-        printf("Server: Received %d bytes from %s:%d\n", received, inet_ntoa(request.address.sin_addr), ntohs(request.address.sin_port));
+        DNSPacketHandler* buffer = new DNSPacketHandler(temp, received);
+        printf("Server: Received %d bytes from %s:%d\n", received, inet_ntoa(request->address.sin_addr), ntohs(request->address.sin_port));
         NASSERT(received, -1, "Receive failed");
         m_Requests.push(std::make_pair(request, buffer));
     }
@@ -43,11 +42,11 @@ void UDPServer::Receive() {
 void UDPServer::Respond(RequestPair request) {
     int sent = sendto(
         m_Socket,
-        request.second->data(),
-        request.second->size(),
+        request.second->getPacket(),
+        request.second->getPacketSize(),
         0,
-        request.first.addressPointer,
-        request.first.addressSize
+        request.first->addressPointer,
+        request.first->addressSize
     );
     NASSERT(sent, -1, "Respond failed");
 }

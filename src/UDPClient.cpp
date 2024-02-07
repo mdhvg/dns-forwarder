@@ -15,17 +15,15 @@ UDPClient::~UDPClient() {
     close(m_Socket);
 }
 
-UString* UDPClient::Send(UString& reqBuffer) {
-    // MIGHT GIVE BUGS
+DNSPacketHandler* UDPClient::Send(DNSPacketHandler* packet) {
     int sent = sendto(m_Socket,
-        reqBuffer.data(),
-        reqBuffer.size(),
+        packet->getPacket(),
+        packet->getPacketSize(),
         0,
         (sockaddr*)&m_RemoteAddr,
         sizeof(m_RemoteAddr));
     NASSERT(sent, -1, "Send failed");
 
-    // MIGHT GIVE BUGS
     unsigned char* temp = new unsigned char[512];
     int received = recvfrom(m_Socket,
         temp,
@@ -34,7 +32,7 @@ UString* UDPClient::Send(UString& reqBuffer) {
         nullptr,
         nullptr);
     NASSERT(received, -1, "Receive failed");
-    UString* recvBuffer = new UString(temp, received);
+    DNSPacketHandler* recvPacket = new DNSPacketHandler(temp, received);
     delete[] temp;
-    return recvBuffer;
+    return recvPacket;
 }
